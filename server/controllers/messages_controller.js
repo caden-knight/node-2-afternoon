@@ -1,5 +1,5 @@
 const messages = []
-let msg_id = 0
+let id = 0
 
 module.exports = {
     readMsg: (req, res) => {
@@ -9,8 +9,8 @@ module.exports = {
     createMsg: (req, res) => {
         const {text, time} = req.body
 
-        const newMsg = {msg_id, text, time}
-        msg_id++
+        const newMsg = {id, text, time}
+        id++
 
         messages.push(newMsg)
 
@@ -18,32 +18,28 @@ module.exports = {
     },
 
         editMsg: (req, res) => {
-        const {msg_id} = req.params
-        const {text, time} = req.body
-        console.log(msg_id)
+        let new_id = req.params.id
+        const {text} = req.body
+        console.log(new_id)
 
-        const index = messages.findIndex(e => e.msg_id === +msg_id)
+        const index = messages.findIndex(e => e.id === +new_id)
 
-        if(index === -1){
-            return res.status(404).send('No message to edit')
+        let newMsg = messages[index]
+        console.log(index)
+        messages[index] = {
+            id: +new_id, 
+            text: text || text[index].text
         }
-        const newMsg = {
-            msg_id: +msg_id,
-            text: text || messages[index].text,
-            time: time || messages[index].time,
-        }
-
-        messages[index] = newMsg
-
+            console.log(newMsg)
         res.status(200).send(messages)
     },
 
     deleteMsg: (req, res) => {
-        const{msg_id} = req.params
+        const {id} = req.params
 
-        const index = messages.findIndex(e => e.msg_id === +msg_id)
+        const index = messages.findIndex(e => e.id === +id)
 
-
+        console.log(index)
         messages.splice(index, 1)
         
 
